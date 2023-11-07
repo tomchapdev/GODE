@@ -9,7 +9,7 @@ program
 program.command('char')
   .argument('<string>', "Format: 'Name Str Dex Con Int Wis Cha HP AC Prof' -f filename")
   .description('Exports character stats to json. For the name use an underscore instead of a space, spaces separate data.')
-  .option('-f, --file <value>', 'Filename for exisiting json', 'new')
+  .option('-f, --file <value>', 'Filename for exisiting json', 'temp')
   .action((str, options) => {
     const data = str.split(' ');
 
@@ -25,23 +25,23 @@ program.command('char')
       armourClass: +data[8],
       proficiency: +data[9]
     };
+    const statsArray = [stats]; // Put into an array for formatting purposes
 
-    if (options.file == 'ne') {
-      const statsArray = [stats, stats];
-      fs.writeFile('new.json', JSON.stringify(statsArray, null, 2), function(error, result) {
+    if (options.file == 'temp') { // No filename so use temp.json
+      fs.writeFile('temp.json', JSON.stringify(statsArray, null, 2), function(error, result) {
         if(error) console.log('error', error);
-    });
+      });
     }
     else {
       let filename = `./${options.file}.json`;
-      const file = require(filename);
-      //console.log(file);
+      const statsArray = require(filename);
 
-      var test = JSON.parse(file);
-      console.log(test);
+      statsArray[statsArray.length] = stats;
+
+      fs.writeFile(filename, JSON.stringify(statsArray, null, 2), function(error, result) {
+        if(error) console.log('error', error)
+      });
     }
-
-    //console.log(JSON.stringify(stats));
   });
 
 program.command('wep')
