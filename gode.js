@@ -1,5 +1,7 @@
 const { program } = require('commander');
+const { assert } = require('console');
 const fs = require('fs');
+const { format } = require('path');
 
 program
   .name('gode')
@@ -64,7 +66,7 @@ program.command('wep')
     });
   }
   else {
-    let filename = `./${options.file}.json`;
+    let filename = formatFilepath(options.file);
     const statsArray = require(filename);
 
     statsArray[statsArray.length] = stats;
@@ -76,3 +78,22 @@ program.command('wep')
 });
 
 program.parse();
+
+function formatFilepath(filepath) {
+  if (filepath.length > 4)
+  {
+    let extension = filepath.slice(filepath.length - 4) === '.json';
+    let dotSlash = filepath.slice(0, 2) === './';
+    if (dotSlash && extension) return filepath;
+    else if (dotSlash) return `${filepath}.json`;
+    else if (extension) return `./${filepath}`;
+    else return `./${filepath}.json`;
+  }
+  else if (filepath.length > 2)
+  {
+    let dotSlash = filepath.slice(0, 2) === './';
+    if (dotSlash) return `${filepath}.json`;
+    else return `./${filepath}.json`;
+  }
+  else return `./${filepath}.json`;
+}
