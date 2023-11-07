@@ -9,7 +9,7 @@ program
 program.command('char')
   .argument('<string>', "Format: 'Name Str Dex Con Int Wis Cha HP AC Prof' -f filename")
   .description('Exports character stats to json. For the name use an underscore instead of a space, spaces separate data.')
-  .option('-f, --file <value>', 'Filename for exisiting json', 'temp')
+  .option('-f, --file <value>', 'Filename for exisiting json', 'tempChar')
   .action((str, options) => {
     const data = str.split(' ');
 
@@ -27,8 +27,8 @@ program.command('char')
     };
     const statsArray = [stats]; // Put into an array for formatting purposes
 
-    if (options.file == 'temp') { // No filename so use temp.json
-      fs.writeFile('temp.json', JSON.stringify(statsArray, null, 2), function(error, result) {
+    if (options.file == 'tempChar') { // No filename so use temp.json
+      fs.writeFile('tempChar.json', JSON.stringify(statsArray, null, 2), function(error, result) {
         if(error) console.log('error', error);
       });
     }
@@ -47,7 +47,7 @@ program.command('char')
 program.command('wep')
 .argument('<string>', "Format: 'Name DmgDice DmgStat(str or dex or best)' -f filename")
 .description('Exports weapon stats to json. For the name replace spaces with underscores, spaces separate data.')
-.option('-f, --file <value>', 'Filename for exisiting json', 'new')
+.option('-f, --file <value>', 'Filename for exisiting json', 'tempWep')
 .action((str, options) => {
   const data = str.split(' ');
 
@@ -56,9 +56,23 @@ program.command('wep')
     damageDice: data[1],
     damageStat: data[2]
   };
+  const statsArray = [stats]; // Put into an array for formatting purposes
 
-  console.log(options.file);
-  console.log(JSON.stringify(stats));
+  if (options.file == 'tempWep') { // No filename so use temp.json
+    fs.writeFile('tempWep.json', JSON.stringify(statsArray, null, 2), function(error, result) {
+      if(error) console.log('error', error);
+    });
+  }
+  else {
+    let filename = `./${options.file}.json`;
+    const statsArray = require(filename);
+
+    statsArray[statsArray.length] = stats;
+
+    fs.writeFile(filename, JSON.stringify(statsArray, null, 2), function(error, result) {
+      if(error) console.log('error', error)
+    });
+  }
 });
 
 program.parse();
