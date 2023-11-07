@@ -1,0 +1,15 @@
+{
+  "name": "go-data-exporter",
+  "version": "0.1.0",
+  "description": "Game Object Data Exporter is a command line tool used to input various game object data which can be exported as json",
+  "main": "gode.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "author": "Thomas Chapman",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^11.1.0",
+    "node": "^21.1.0"
+  }
+}
